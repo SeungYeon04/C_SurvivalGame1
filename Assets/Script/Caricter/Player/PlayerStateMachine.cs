@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,7 @@ public class PlayerStateMachine : StateMachine
     public PlayerIdleState IdleState { get; }
 
     //
+    public Vector2 MovementInput { get; set; }
     public float MovementSpeed { get; private set; }
     public float MoveSpeed {  get; private set; }
     public float RotationDamping { get; set; } = 1f;
@@ -18,7 +20,7 @@ public class PlayerStateMachine : StateMachine
     public float JumpForce { get; set; }
 
     public Transform MainCameraTransform { get; set; }
-    public Vector2 MovementInput { get; internal set; }
+
 
     public PlayerStateMachine(Player player)
     {
@@ -30,5 +32,10 @@ public class PlayerStateMachine : StateMachine
 
         MovementSpeed = player.Data.GroundedData.BaseSpeed;
         RotationDamping = player.Data.GroundedData.BaseRotationDamping;
+    }
+
+    internal void ChangeState(object walkState)
+    {
+        throw new NotImplementedException();
     }
 }
