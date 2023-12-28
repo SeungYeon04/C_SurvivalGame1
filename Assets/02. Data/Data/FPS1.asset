@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6494e1f980c9b9e4a8be7d451bc0f159, type: 3}
+  m_Name: FPS1
+  m_EditorClassIdentifier: 
+  displayName: "\uCD1D"
+  description: "\uC0AC\uB0E5\uC6A9 \uCD1D 1\uC785\uB2C8\uB2E4"
+  type: 1
+  icon: {fileID: 21300000, guid: 2fd56454166da244880a45fdd1261dc0, type: 3}
+  dropPrefab: {fileID: 3221386454673375191, guid: af8b733bc99fb82499f5d1f51c5268f7,
+    type: 3}
+  canStack: 0
+  maxStackAmount: 0
