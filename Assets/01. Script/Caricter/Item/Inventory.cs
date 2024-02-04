@@ -1,9 +1,11 @@
 //using System; 랜덤 오류나서 잠깐 없앰. 
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events; 
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using static UnityEditor.Progress;
 
 public class ItemSlot
@@ -14,7 +16,7 @@ public class ItemSlot
 
 public class Inventory : MonoBehaviour
 {
-    public ItemSlotUI[] uiSlot; //스크립트 이름이엇누
+    public ItemSlotUI[] uiSlots; //스크립트 이름이엇누
     public ItemSlot[] slots;
 
     public GameObject inventoryWindow;
@@ -57,13 +59,13 @@ public class Inventory : MonoBehaviour
     {
         
         inventoryWindow.SetActive(false);
-        slots = new ItemSlot[uiSlot.Length]; //강의자료는 uiSlots이네 ㅋㅋ 
+        slots = new ItemSlot[uiSlots.Length]; //강의자료는 uiSlots이네 ㅋㅋ 
 
         for (int i = 0; i < slots.Length; i++)
         {
             slots[i] = new ItemSlot();
-            uiSlot[i].index = i;
-            uiSlot[i].Clear();
+            uiSlots[i].index = i; //Null이라 뜨는 부분
+            uiSlots[i].Clear();
         }
 
         ClearSeletecItemWindow();
@@ -72,13 +74,17 @@ public class Inventory : MonoBehaviour
  
     public void Toggle() //인벤토리 창 등장 사라지기. 
     {
-        if(inventoryWindow.activeInHierarchy)
+        if(inventoryWindow.activeInHierarchy) //하이라이키 창에서 켜져있나?. 
         {
             inventoryWindow.SetActive(false); 
+            onCloseInventory?.Invoke(); //꺼지는 것. 
+            controller.ToggleCursor(false); //커서 없애는 것. 
         } 
         else
         {
             inventoryWindow.SetActive(true); 
+            onOpenInventory?.Invoke(); //켜지는 것. 
+            controller.ToggleCursor(true); //인벤토리에서 커서 사용. 
         }
     }
 
@@ -91,10 +97,10 @@ public class Inventory : MonoBehaviour
     { 
         if(item.canStack)
         {
-            ItemSlot slotToStackTo = GetItemStack(item); //쌓을 수 있음 쌓고 
+            ItemSlot slotToStackTo = GetItemStack(item); //쌓을 수 있음 
             if(slotToStackTo != null)
             {
-                slotToStackTo.quantity++;
+                slotToStackTo.quantity++; //아이템을 찾고. 
                 UpdateUI();
                 return; 
             }
@@ -122,12 +128,21 @@ public class Inventory : MonoBehaviour
         {
             if (slots[i].item != null)
             
-                uiSlot[i].Set(slots[i]); 
+                uiSlots[i].Set(slots[i]); 
             else
-                uiSlot[i].Clear(); 
+                uiSlots[i].Clear(); 
             
         }
     } 
+
+    public void OnInventoryButton(InputAction.CallbackContext callbackContext)
+    {
+        //인벤토리 버튼 오픈일 걸. 
+        if(callbackContext.phase == InputActionPhase.Started)
+        {
+            Toggle();
+        }
+    }
 
     ItemSlot GetItemStack(ItemData item)
     {
@@ -162,16 +177,16 @@ public class Inventory : MonoBehaviour
 
         selectedItemName.text = string.Empty;
         selectedItemStatValues.text = string.Empty;
-        /*
+        
         for (int i = 0; i < selectedItem.item.consumables.Length; i++)
         {
             selectedItemName.text += selectedItem.item.consumables[i].type.ToString() + "\n";
             selectedItemStatValues.text += selectedItem.item.consumables[i].value.ToString() + "\n";
-        }*/
+        }
         
         useButton.SetActive(selectedItem.item.type == ItemType.Consumable);
-        equipButton.SetActive(selectedItem.item.type == ItemType.Equipable && !uiSlot[index].equipped); //아이템 장착중이냐 
-        unEquipButton.SetActive(selectedItem.item.type == ItemType.Equipable && uiSlot[index].equipped);
+        equipButton.SetActive(selectedItem.item.type == ItemType.Equipable && !uiSlots[index].equipped); //아이템 장착중이냐 
+        unEquipButton.SetActive(selectedItem.item.type == ItemType.Equipable && uiSlots[index].equipped);
         dropButton.SetActive(true);
     }
 
@@ -203,7 +218,7 @@ public class Inventory : MonoBehaviour
 
     } 
 
-    void UpEquip(int index)
+    void UnEquip(int index)
     {
 
     }
