@@ -9,8 +9,8 @@ public class ItemSlotUI : MonoBehaviour
     public Button button;
     public Image icon;
     public TextMeshProUGUI quatityText; //TextMeshProUGUI 그 폰트 가능한 텍스트UI노.. 
-    private ItemSlot curSlot; 
-    public Outline outline;
+    private ItemSlot curSlot;
+    private Outline outline;
 
     public int index;
     public bool equipped;

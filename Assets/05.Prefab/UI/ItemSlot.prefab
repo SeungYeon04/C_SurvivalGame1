@@ -308,7 +308,7 @@ MonoBehaviour:
   button: {fileID: 4407747234511069536}
   icon: {fileID: 5839343832749229229}
   quatityText: {fileID: 7658204060747741110}
-  outline: {fileID: 0}
+  outline: {fileID: 2808514134832096233}
   index: 0
   equipped: 0
 --- !u!114 &4407747234511069536

@@ -26,7 +26,7 @@ public class Inventory : MonoBehaviour
 
     private ItemSlot selectedItem;
     private int selectedItemIndex;
-    public TextMeshProUGUI selectedItemName;
+    public TextMeshProUGUI selectedItemNames;
     public TextMeshProUGUI selectedItemDescription;
     public TextMeshProUGUI selectedItemStatNames;
     public TextMeshProUGUI selectedItemStatValues;
@@ -88,6 +88,15 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    public void OnInventoryButton(InputAction.CallbackContext callbackContext)
+    {
+        //켜져있음 켜지고 꺼져있음 꺼져라. 
+        if (callbackContext.phase == InputActionPhase.Started)
+        {
+            Toggle();
+        }
+    }
+
     public bool IsOpen()
     {
         return inventoryWindow.activeInHierarchy; 
@@ -101,7 +110,7 @@ public class Inventory : MonoBehaviour
             if(slotToStackTo != null)
             {
                 slotToStackTo.quantity++; //아이템을 찾고. 
-                UpdateUI();
+                UPdateUI();
                 return; 
             }
         }
@@ -109,8 +118,8 @@ public class Inventory : MonoBehaviour
         if(emptySlot != null) //아니면 빈 칸 찾는. 
         {
             emptySlot.item = item;
-            emptySlot.quantity = 1; 
-            UpdateUI(); 
+            emptySlot.quantity = 1;
+            UPdateUI(); 
             return; 
         }
 
@@ -122,7 +131,7 @@ public class Inventory : MonoBehaviour
         Instantiate(item.dropPrefab, dropPosition.position, Quaternion.Euler(Vector3.one * Random.value * 360f)); 
     }
 
-    void UpdateUI()
+    void UPdateUI()
     {
         for(int i = 0; i < slots.Length; i++)
         {
@@ -135,20 +144,13 @@ public class Inventory : MonoBehaviour
         }
     } 
 
-    public void OnInventoryButton(InputAction.CallbackContext callbackContext)
-    {
-        //인벤토리 버튼 오픈일 걸. 
-        if(callbackContext.phase == InputActionPhase.Started)
-        {
-            Toggle();
-        }
-    }
+
 
     ItemSlot GetItemStack(ItemData item)
     {
         for(int i = 0; i < slots.Length; i++ )
         {
-            if (slots[i].item != item && slots[i].quantity < item.maxStackAmount)
+            if (slots[i].item == item && slots[i].quantity < item.maxStackAmount) //maxStackAmount보다 작으면?. 
                 return slots[i];  //쌓을 수 있음 앃고 올리구 
         }
         return null; //넣을 상태로 만들어주는.. 
@@ -158,34 +160,34 @@ public class Inventory : MonoBehaviour
     {
         for (int i = 0; i < slots.Length; i++)
         {
-            if (slots[i].item == null)
-                return slots[i];  //쌓을 수 있음 앃고 올리구 
+            if (slots[i].item == null) //아이템이 안 든. 
+                return slots[i];  //쌓을 수 있음 앃고 올리구. 
         } 
         return null; 
     } 
 
     public void SelectItem(int index)
     {
-        if (slots[index].item != null)
+        if (slots[index].item == null)
             return;
 
         selectedItem = slots[index];
         selectedItemIndex = index;
 
-        selectedItemName.text = selectedItem.item.displayName;
+        selectedItemNames.text = selectedItem.item.displayName;
         selectedItemDescription.text = selectedItem.item.description;
 
-        selectedItemName.text = string.Empty;
+        selectedItemNames.text = string.Empty;
         selectedItemStatValues.text = string.Empty;
         
-        for (int i = 0; i < selectedItem.item.consumables.Length; i++)
-        {
-            selectedItemName.text += selectedItem.item.consumables[i].type.ToString() + "\n";
-            selectedItemStatValues.text += selectedItem.item.consumables[i].value.ToString() + "\n";
-        }
+    //    for (int i = 0; i < selectedItem.item.consumables.Length; i++)
+    //    {
+    //        selectedItemNames.text += selectedItem.item.consumables[i].type.ToString() + "\n";
+    //        selectedItemStatValues.text += selectedItem.item.consumables[i].value.ToString() + "\n";
+     //   }
         
         useButton.SetActive(selectedItem.item.type == ItemType.Consumable);
-        equipButton.SetActive(selectedItem.item.type == ItemType.Equipable && !uiSlots[index].equipped); //아이템 장착중이냐 
+        equipButton.SetActive(selectedItem.item.type == ItemType.Equipable && !uiSlots[index].equipped); //아이템 장착중이냐 인덱스 이큅이냐. 
         unEquipButton.SetActive(selectedItem.item.type == ItemType.Equipable && uiSlots[index].equipped);
         dropButton.SetActive(true);
     }
@@ -194,7 +196,7 @@ public class Inventory : MonoBehaviour
     { 
 
         selectedItem = null;
-        selectedItemName.text = string.Empty; 
+        selectedItemNames.text = string.Empty; 
         selectedItemDescription.text = string.Empty;
 
         selectedItemStatNames.text = string.Empty;   
